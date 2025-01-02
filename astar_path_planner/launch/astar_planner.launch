@@ -36,9 +36,15 @@
 
     <!--    启动轨迹生成节点-->
     <!--    your code-->
-
-
-
+    <!-- <node pkg="astar_path_planner" type="astar_planner" name="astar_planner" output="screen">
+        <param name="map_min" value="$(arg map_min)" />
+        <param name="map_max" value="$(arg map_max)" />
+        <param name="grid_resolution" value="$(arg grid_resolution)" />
+        <param name="start_x" value="$(arg start_x)" />
+        <param name="start_y" value="$(arg start_y)" />
+        <param name="goal_x" value="$(arg goal_x)" />
+        <param name="goal_y" value="$(arg goal_y)" />
+    </node> -->
 
     <!-- 启动 RViz -->
     <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rviz_config)" />

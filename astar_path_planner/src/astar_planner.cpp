@@ -43,8 +43,17 @@ struct GridMap {
         int grid_cx = std::round((cx - map_min) / grid_resolution);
         int grid_cy = std::round((cy - map_min) / grid_resolution);
         int grid_radius = std::round(radius / grid_resolution);
+        int grid_radius_square = grid_radius * grid_radius;
         // Step 1: 将圆形区域标记为占用
-            // your code
+            for(int i = grid_cx - grid_radius; i <= grid_cx + grid_radius; i++){
+                for(int j = grid_cy - grid_radius; j <= grid_cy + grid_radius; j++){
+                    if((i - grid_cx) * (i - grid_cx) + (j - grid_cy) * (j - grid_cy) <= grid_radius_square){
+                        if(i >= 0 && i < width && j >= 0 && j < height){
+                            grid[i][j] = 1;
+                        }
+                    }
+                }
+            }
         // finish
     }
 };
@@ -85,7 +94,7 @@ public:
         open_list.push(std::make_shared<Node>(Node(gridStart.first, gridStart.second, 0.0, heuristic(gridStart, gridGoal))));
         // Step 3： 实现 A* 算法，搜索结束调用 reconstructPath 返回路径
 
-            // 样例路径，用于给出路径形式，实现 A* 算法时请删除
+            /* 样例路径，用于给出路径形式，实现 A* 算法时请删除
                 std::vector<Eigen::Vector2d> path;
                 int num_points = 100; // 生成路径上的点数
                 for (int i = 0; i <= num_points; ++i) {
@@ -94,8 +103,55 @@ public:
                     path.push_back(point);
                 }
                 return path;
-            // 注释结束
-            // your code
+            注释结束*/
+            
+            while(!open_list.empty()){
+                // 从开放列表中遍历取出代价最小的节点
+                auto current = open_list.top();//由于已经实现队列为最小堆，只需取出队列头
+                open_list.pop();
+                // 如果当前节点是终点，回溯路径
+                if(current->x == gridGoal.first && current->y == gridGoal.second){
+                    return reconstructPath(current);
+                }
+                // 将当前节点加入关闭列表
+                closed_list[current->x][current->y] = true;
+                // 获取当前节点的邻居节点
+                auto neighbors = getNeighbors(*current);
+                for(auto& neighbor : neighbors){
+                    // 如果邻居节点在关闭列表中或者是障碍物，跳过
+                    if(closed_list[neighbor.x][neighbor.y] || grid_map_.grid[neighbor.x][neighbor.y] == 1){
+                        continue;
+                    }
+                    // 计算邻居节点的代价
+                    double new_g_cost = current->g_cost + distance(*current, neighbor);
+                    // 判断邻居节点是否在开放列表中
+                    bool in_open_list = false;
+                    // 由于优先队列没有提供直接遍历优先队列的方法，这里使用一个临时队列来完成
+                    std::priority_queue<std::shared_ptr<Node>, std::vector<std::shared_ptr<Node>>, cmp> open_list_temp;
+                    while(!open_list.empty()){
+                        auto temp = open_list.top();
+                        open_list_temp.push(temp);
+                        open_list.pop();
+                        if(temp->x == neighbor.x && temp->y == neighbor.y){
+                            in_open_list = true;
+                            break;
+                        }
+                    }
+                    while(!open_list_temp.empty()){
+                        open_list.push(open_list_temp.top());
+                        open_list_temp.pop();
+                    }
+                    // 如果邻居节点不在开放列表中，或者新的代价更小，则更新open_list
+                    if(!in_open_list || new_g_cost < neighbor.g_cost){
+                        neighbor.g_cost = new_g_cost;
+                        neighbor.h_cost = heuristic({neighbor.x, neighbor.y}, gridGoal);
+                        neighbor.parent = current;
+                        if(!in_open_list){
+                            open_list.push(std::make_shared<Node>(neighbor));
+                        }
+                    }
+                }
+            }
 
         // finish
 
@@ -141,9 +197,11 @@ private:
                 {1, 0}, {0, 1}, {-1, 0}, {0, -1}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
         for (const auto& dir : directions) {
             // Step 2: 根据当前节点和方向计算邻居节点的坐标，并将其加入 neighbors
-
-                // your code
-
+            int x = current.x + dir.first;
+            int y = current.y + dir.second;
+            if(x >= 0 && x < width_ && y >= 0 && y < height_){
+                neighbors.push_back(Node(x, y, 999 , 0.0));
+            }
             // finish
         }
 
