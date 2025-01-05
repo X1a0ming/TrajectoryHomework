@@ -23,5 +23,5 @@ target_link_libraries(obstacle_generator ${catkin_LIBRARIES})
 add_executable(astar_planner src/astar_planner.cpp)
 target_link_libraries(astar_planner ${catkin_LIBRARIES} ${EIGEN3_LIBRARIES})
 
-#add_executable(trajectory src/Trajectory.cpp)
-#target_link_libraries(trajectory ${catkin_LIBRARIES} ${EIGEN3_LIBRARIES})
+add_executable(trajectory_generator src/Trajectory.cpp)
+target_link_libraries(trajectory_generator ${catkin_LIBRARIES} ${EIGEN3_LIBRARIES})

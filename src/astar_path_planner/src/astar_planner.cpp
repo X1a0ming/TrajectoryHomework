@@ -42,7 +42,7 @@ struct GridMap {
     void markObstacle(double cx, double cy, double radius) {
         int grid_cx = std::round((cx - map_min) / grid_resolution);
         int grid_cy = std::round((cy - map_min) / grid_resolution);
-        int grid_radius = std::round(radius / grid_resolution);
+        int grid_radius = std::round(radius  / grid_resolution)+1;
         int grid_radius_square = grid_radius * grid_radius;
         // Step 1: 将圆形区域标记为占用
             for(int i = grid_cx - grid_radius; i <= grid_cx + grid_radius; i++){
