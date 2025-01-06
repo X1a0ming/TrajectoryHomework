@@ -22,16 +22,25 @@ public:
 
     // 生成五次多项式轨迹
     std::vector<Eigen::Vector2d> GenerateTrajectory(const std::vector<Eigen::Vector2d>& path) {
+        int num_points = 30; // 生成路径上的点数
+
         std::vector<Eigen::Vector2d> trajectory;
-        if (path.size() < 2) {
+        if (path.size() < num_points) {
             return trajectory; // 路径点不足，无法生成轨迹
         }
 
+        // 采样路径点
+        Path sample_path;
+        for (size_t i = 0; i < path.size(); i += path.size() / num_points) {
+            sample_path.push_back(path[i]);
+        }
+        sample_path.push_back(path.back());
+
         // 假设每段轨迹的时间间隔为1秒
         double dt = 1.0;
-        for (size_t i = 0; i < path.size() - 1; ++i) {
-            Eigen::Vector2d start = path[i];
-            Eigen::Vector2d end = path[i + 1];
+        for (size_t i = 0; i < sample_path.size() - 1; ++i) {
+            Eigen::Vector2d start = sample_path[i];
+            Eigen::Vector2d end = sample_path[i + 1];
 
             // 生成五次多项式系数
             Eigen::VectorXd x_coeffs = computeQuinticPolynomialCoefficients(start.x(), 0.0, 0.0, end.x(), 0.0, 0.0, dt);
