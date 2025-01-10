@@ -22,7 +22,7 @@ roslaunch astar_path_planner astar_planner.launch
 
 在src文件夹下的astar_planner中替换Step1～3的内容，实现随机生成的地图上的A*路径规划。
 
-## 任务二
+## 任务二 **已完成**
 在Trajectory中替换Step 4部分，实现轨迹生成类，具体方案可见代码注释
 
 ## 提交要求：
