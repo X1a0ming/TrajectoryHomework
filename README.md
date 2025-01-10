@@ -15,15 +15,17 @@ source devel/setup.sh
 roslaunch astar_path_planner astar_planner.launch
 ```
 
-当编译无报错、rviz显示随机生成圆柱障碍物和绿色直线初始路径时表明编译安装成功
-* 已完成A*，应当显示无碰撞路径
-
 ## 任务一 **已完成**
 
 在src文件夹下的astar_planner中替换Step1～3的内容，实现随机生成的地图上的A*路径规划。
 
+**若要查看A*生成路径，请在RVIZ左侧"Path""Topic"选中"/path"**
+
 ## 任务二 **已完成**
-在Trajectory中替换Step 4部分，实现轨迹生成类，具体方案可见代码注释
+在Trajectory中替换Step 4部分，实现轨迹生成类，具体方案可见代码注释。
+
+**若要查看轨迹优化路径，请在RVIZ左侧"Path""Topic"选中"/trajectory"**
+
 
 ## 提交要求：
 1. 按照PPT要求完成实验报告
